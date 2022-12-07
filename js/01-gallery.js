@@ -24,11 +24,25 @@ galleryItems.forEach(item => {
 const galleryArea = document.querySelector('.gallery');
 galleryArea.append(...imageElements);
 
-// todo can we create instance 1 time and change src to image every click to image
 galleryArea.addEventListener('click', e => {
     e.preventDefault();
+
     const linkToLargeImage = e.target.dataset.source;
-    basicLightbox.create(`
-		<img width="1400" height="900" src="${linkToLargeImage}">
-	`).show();
+    if (!linkToLargeImage) return;
+
+    const imageInstance = basicLightbox.create(`<img width="1400" height="900" src="${linkToLargeImage}">`, {
+        onShow: () => {
+            document.addEventListener('keydown', closeImageHandler)
+        },
+        onClose: () => {
+            document.removeEventListener('keydown', closeImageHandler);
+        }
+    })
+
+    imageInstance.show();
+
+    function closeImageHandler (e) {
+        if (e.key !== 'Escape') return;
+        imageInstance.close();
+    }
 })
