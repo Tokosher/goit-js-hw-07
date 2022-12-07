@@ -1,28 +1,16 @@
 import { galleryItems } from './gallery-items.js';
 // Change code below this line
-const imageElements = [];
 
-galleryItems.forEach(item => {
-    const divAreaForImage = document.createElement('div');
-    divAreaForImage.classList.add('gallery__item');
-
-    const linkElement = document.createElement('a');
-    linkElement.classList.add('gallery__link');
-    linkElement.href = item.original;
-    divAreaForImage.insertAdjacentElement('afterbegin', linkElement);
-
-    const previewImgElement = document.createElement('img');
-    previewImgElement.classList.add('gallery__image');
-    previewImgElement.src = item.preview;
-    previewImgElement.dataset.source = item.original;
-    previewImgElement.alt = item.description;
-    linkElement.insertAdjacentElement('afterbegin', previewImgElement);
-
-    imageElements.push(divAreaForImage);
-})
+const imageHTMLElements = galleryItems.map(imageInfo => {
+    return `<div class="gallery__item">
+                <a class="gallery__link" href="${imageInfo.original}">
+                    <img class="gallery__image" src="${imageInfo.preview}" alt="${imageInfo.description}" data-source="${imageInfo.original}">
+                </a>
+            </div>`
+}).join('');
 
 const galleryArea = document.querySelector('.gallery');
-galleryArea.append(...imageElements);
+galleryArea.insertAdjacentHTML('afterbegin', imageHTMLElements);
 
 galleryArea.addEventListener('click', e => {
     e.preventDefault();
